@@ -3,7 +3,7 @@ import streamlit as st
 from openai import OpenAI
 import streamlit as st
 
-st.title("AskKhushi")
+st.title("ChatGPT 3.5")
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
