@@ -5,8 +5,9 @@ st.title("AskKhushi")
 
 st.divider()
 
-if st.button("Test PDF content extraction"):
+if st.button("Test content chunking"):
     full_document = read_pdf_from_directory("pdf")
-    st.success(full_document)
+    chunked_document = chunk_text_for_list(docs=full_document)
+    st.success(chunked_document)
 else:
-    st.warning("Please click on the button to test PDF extraction")
+    st.warning("Please click on the button to test chunking")
