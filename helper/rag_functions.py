@@ -1,5 +1,10 @@
 from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
+from langchain.embeddings.openai import OpenAIEmbeddings
+import streamlit as st
 
+
+OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
+EMBEDDINGS = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
 
 def read_pdf_from_directory(directory: str) -> list[str]:
     # Initialize a PyPDFDirectoryLoader object with the given directory
@@ -42,3 +47,8 @@ def chunk_text_for_list(docs, max_chunk_size = 1000):
 
     # Apply the chunk_text function to each document in the list
     return [chunk_text(doc, max_chunk_size) for doc in docs]
+
+
+def generate_embeddings(documents: list[any]) -> list[list[float]]:
+    embedded = [EMBEDDINGS.embed_documents(doc) for doc in documents]
+    return embedded
