@@ -1,6 +1,7 @@
 from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 import streamlit as st
+import hashlib
 
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
@@ -52,3 +53,35 @@ def chunk_text_for_list(docs, max_chunk_size = 1000):
 def generate_embeddings(documents: list[any]) -> list[list[float]]:
     embedded = [EMBEDDINGS.embed_documents(doc) for doc in documents]
     return embedded
+
+
+def generate_short_id(content: str) -> str:
+    hash_obj = hashlib.sha256()
+    hash_obj.update(content.encode("utf-8"))
+    return hash_obj.hexdigest()
+
+
+def map_vector_and_text(
+    documents: list[any], doc_embeddings: list[list[float]]
+) -> list[dict[str, any]]:
+    data_with_metadata = []
+
+    for doc_text, embedding in zip(documents, doc_embeddings):
+        # Convert doc_text to string if it's not already a string
+        if not isinstance(doc_text, str):
+            doc_text = str(doc_text)
+
+        # Generate a unique ID based on the text content
+        doc_id = generate_short_id(doc_text)
+
+        # Create a data item dictionary
+        data_item = {
+            "id": doc_id,
+            "values": embedding[0],
+            "metadata": {"text": doc_text},  # Include the text as metadata
+        }
+
+        # Append the data item to the list
+        data_with_metadata.append(data_item)
+
+    return data_with_metadata
