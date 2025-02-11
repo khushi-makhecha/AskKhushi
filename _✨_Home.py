@@ -1,5 +1,6 @@
 import streamlit as st
 
+st.set_page_config(page_title="Home - AskKhushi")
 st.title("Welcome to my first AI Chatbot")
 
 st.divider()

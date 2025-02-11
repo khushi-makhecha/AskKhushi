@@ -1,6 +1,7 @@
 import streamlit as st
 from helper.rag_functions import *
 
+st.set_page_config(page_title="AskKhushi")
 st.title("AskKhushi")
 
 st.divider()

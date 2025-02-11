@@ -1,11 +1,13 @@
 import streamlit as st
-
 from openai import OpenAI
 import streamlit as st
 
-st.title("ChatGPT 3.5")
-
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+st.set_page_config(page_title="Try ChatGPT - AskKhushi")
+st.title("ChatGPT 3.5")
+st.markdown("# Main page 🎈")
+st.sidebar.markdown("# Main page 🎈")
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
@@ -17,7 +19,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("What's up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
