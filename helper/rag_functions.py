@@ -2,10 +2,13 @@ from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 import streamlit as st
 import hashlib
+from pinecone import Pinecone
 
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
 EMBEDDINGS = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
+PINECONE_API_KEY=st.secrets["PINECONE_API_KEY"]
+
 
 def read_pdf_from_directory(directory: str) -> list[str]:
     # Initialize a PyPDFDirectoryLoader object with the given directory
@@ -85,3 +88,14 @@ def map_vector_and_text(
         data_with_metadata.append(data_item)
 
     return data_with_metadata
+
+pc = Pinecone(api_key=PINECONE_API_KEY)
+index = pc.Index(st.secrets["PINECONE_INDEX"])
+
+def upsert_data_to_pinecone(data_with_metadata: list[dict[str, any]]) -> None:
+    try:
+        index.upsert(vectors=data_with_metadata)
+        return True
+    except Exception as e:
+        st.write(e)
+        return False
