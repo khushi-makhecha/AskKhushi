@@ -3,6 +3,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 import streamlit as st
 import hashlib
 from pinecone import Pinecone
+from openai import OpenAI
 
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
@@ -114,3 +115,22 @@ def query_pinecone_index(
         vector=query_embeddings, top_k=top_k, include_metadata=include_metadata
     )
     return query_response
+
+
+def generate_answer(answers: dict[str, any], prompt: str) -> str:
+  client = OpenAI(api_key=OPENAI_API_KEY)
+  text_content = answers['matches'][0]['metadata']['text']
+
+  completion = client.chat.completions.create(
+      model="gpt-4o",
+      messages=[
+          {"role": "developer", "content": text_content},
+          {
+              "role": "user",
+              "content": "With the given context provide a better answer to the question: " + prompt,
+
+          }
+      ]
+  )
+
+  return completion.choices[0].message

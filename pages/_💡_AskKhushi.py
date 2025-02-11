@@ -19,6 +19,7 @@ if st.button("Test with prompt"):
     if prompt:
         query_embeddings = get_query_embeddings(query=prompt)
         matching_record = query_pinecone_index(query_embeddings=query_embeddings)
-        st.success(matching_record)
+        llm_response = generate_answer(matching_record, prompt)
+        st.success(llm_response)
 else:
-    st.warning("Please click on the button to test your prompt meta data")
+    st.warning("Please click on the button to test the LLM response")
