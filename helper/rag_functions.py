@@ -105,3 +105,12 @@ def upsert_data_to_pinecone(data_with_metadata: list[dict[str, any]]) -> None:
 def get_query_embeddings(query: str) -> list[float]:
     query_embeddings = EMBEDDINGS.embed_query(query)
     return query_embeddings
+
+
+def query_pinecone_index(
+    query_embeddings: list, top_k: int = 2, include_metadata: bool = True
+) -> dict[str, any]:
+    query_response = index.query(
+        vector=query_embeddings, top_k=top_k, include_metadata=include_metadata
+    )
+    return query_response

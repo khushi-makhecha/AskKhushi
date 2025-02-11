@@ -16,7 +16,9 @@ else:
 
 prompt = st.text_input("Type in your prompt")
 if st.button("Test with prompt"):
-    query_embeddings = get_query_embeddings(query=prompt) if prompt else ""
-    st.success(query_embeddings)
+    if prompt:
+        query_embeddings = get_query_embeddings(query=prompt)
+        matching_record = query_pinecone_index(query_embeddings=query_embeddings)
+        st.success(matching_record)
 else:
-    st.warning("Please click on the button to test your prompt embeddings")
+    st.warning("Please click on the button to test your prompt meta data")
