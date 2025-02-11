@@ -92,6 +92,7 @@ def map_vector_and_text(
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(st.secrets["PINECONE_INDEX"])
 
+
 def upsert_data_to_pinecone(data_with_metadata: list[dict[str, any]]) -> None:
     try:
         index.upsert(vectors=data_with_metadata)
@@ -99,3 +100,8 @@ def upsert_data_to_pinecone(data_with_metadata: list[dict[str, any]]) -> None:
     except Exception as e:
         st.write(e)
         return False
+
+
+def get_query_embeddings(query: str) -> list[float]:
+    query_embeddings = EMBEDDINGS.embed_query(query)
+    return query_embeddings

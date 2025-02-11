@@ -10,7 +10,13 @@ if st.button("Test Pinecone Index"):
     chunked_document = chunk_text_for_list(docs=full_document)
     chunked_document_embeddings = generate_embeddings(documents=chunked_document)
     data_with_meta_data = map_vector_and_text(documents=chunked_document, doc_embeddings=chunked_document_embeddings)
-    upsert_success = upsert_data_to_pinecone(data_with_metadata= data_with_meta_data)
-    st.success(upsert_success)
+    # upsert_success = upsert_data_to_pinecone(data_with_metadata= data_with_meta_data)
 else:
     st.warning("Please click on the button to test pinecone records")
+
+prompt = st.text_input("Type in your prompt")
+if st.button("Test with prompt"):
+    query_embeddings = get_query_embeddings(query=prompt) if prompt else ""
+    st.success(query_embeddings)
+else:
+    st.warning("Please click on the button to test your prompt embeddings")
