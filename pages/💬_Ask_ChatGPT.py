@@ -6,8 +6,6 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="Try ChatGPT - AskKhushi")
 st.title("ChatGPT 3.5")
-st.markdown("# Main page 🎈")
-st.sidebar.markdown("# Main page 🎈")
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
