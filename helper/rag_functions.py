@@ -4,6 +4,9 @@ import streamlit as st
 import hashlib
 from pinecone import Pinecone
 from openai import OpenAI
+from io import StringIO
+import PyPDF2
+from io import BytesIO
 
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
@@ -134,3 +137,45 @@ def generate_answer(answers: dict[str, any], prompt: str) -> str:
   )
 
   return completion.choices[0].message
+
+
+def test_file_upload():
+    try:
+        uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True)
+        if uploaded_files:
+            all_text_content = []
+            for uploaded_file in uploaded_files:
+                if uploaded_file.type == "application/pdf":
+                    pdf_reader = PyPDF2.PdfReader(uploaded_file)
+                    text_content = ""
+                    
+                    for page in pdf_reader.pages:
+                        page_text = page.extract_text()
+                        if page_text:
+                            # Clean up the text
+                            # Replace multiple spaces with single space
+                            page_text = ' '.join(page_text.split())
+                            # Split into sentences or natural breaks
+                            sentences = page_text.split('.')
+                            # Rejoin sentences with proper formatting
+                            formatted_text = '. '.join(sentence.strip() for sentence in sentences if sentence.strip())
+                            if formatted_text and not formatted_text.endswith('.'):
+                                formatted_text += '.'
+                            text_content += formatted_text + '\n\n'
+                    
+                    all_text_content.append(text_content.strip())
+                elif uploaded_file.type == "text/plain":
+                    # To convert to a string based IO:
+                    stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+                    # To read file as string:
+                    string_data = stringio.read()
+                    all_text_content.append(string_data)
+                else:
+                    st.error(f"Unsupported file type: {uploaded_file.type}. Please upload PDF or TXT files only.")
+                    return None
+                    
+            st.write(all_text_content)           
+            return all_text_content if all_text_content else None
+    except Exception as e:
+        st.error(f"Error processing file: {str(e)}")
+        return None
