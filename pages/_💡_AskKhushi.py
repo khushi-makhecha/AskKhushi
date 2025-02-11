@@ -8,6 +8,10 @@ st.divider()
 
 test_file_upload()
 
+url = st.text_input("Paste the web URL")
+if st.button("Test Web Search"):
+    scrape_url(url)
+
 if st.button("Test Pinecone Index"):
     full_document = read_pdf_from_directory("pdf")
     chunked_document = chunk_text_for_list(docs=full_document)

@@ -7,6 +7,8 @@ from openai import OpenAI
 from io import StringIO
 import PyPDF2
 from io import BytesIO
+from bs4 import BeautifulSoup
+import requests
 
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
@@ -174,8 +176,21 @@ def test_file_upload():
                     st.error(f"Unsupported file type: {uploaded_file.type}. Please upload PDF or TXT files only.")
                     return None
                     
-            st.write(all_text_content)           
             return all_text_content if all_text_content else None
     except Exception as e:
         st.error(f"Error processing file: {str(e)}")
         return None
+
+
+def scrape_url(url):
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        page_content = {
+            'title': soup.title.string,
+            'content': soup.get_text()
+        }
+        st.write(page_content)
+        return page_content
+    except Exception as e:
+        return f"Error scraping web page: {str(e)}"
