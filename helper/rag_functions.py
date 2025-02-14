@@ -30,30 +30,33 @@ def read_pdf_from_directory(directory: str) -> list[str]:
 
 
 def chunk_text_for_list(docs, max_chunk_size = 1000):
-    def chunk_text(text, max_chunk_size):
-        # Ensure each text ends with a double newline to correctly split paragraphs
-        if not text.endswith("\n\n"):
-            text += "\n\n"
-        # Split text into paragraphs
-        paragraphs = text.split("\n\n")
-        chunks = []
-        current_chunk = ""
-        # Iterate over paragraphs and assemble chunks
-        for paragraph in paragraphs:
-            # Check if adding the current paragraph exceeds the maximum chunk size
-            if (
-                len(current_chunk) + len(paragraph) + 2 > max_chunk_size
-                and current_chunk
-            ):
-                # If so, add the current chunk to the list and start a new chunk
+    def chunk_text(text_list, max_chunk_size):
+        all_chunks = []
+        for text in text_list:
+            # Ensure each text ends with a double newline to correctly split paragraphs
+            if not text.endswith("\n\n"):
+                text += "\n\n"
+            # Split text into paragraphs
+            paragraphs = text.split("\n\n")
+            chunks = []
+            current_chunk = ""
+            # Iterate over paragraphs and assemble chunks
+            for paragraph in paragraphs:
+                # Check if adding the current paragraph exceeds the maximum chunk size
+                if (
+                    len(current_chunk) + len(paragraph) + 2 > max_chunk_size
+                    and current_chunk
+                ):
+                    # If so, add the current chunk to the list and start a new chunk
+                    chunks.append(current_chunk.strip())
+                    current_chunk = ""
+                # Add the current paragraph to the current chunk
+                current_chunk += paragraph.strip() + "\n\n"
+            # Add any remaining text as the last chunk
+            if current_chunk:
                 chunks.append(current_chunk.strip())
-                current_chunk = ""
-            # Add the current paragraph to the current chunk
-            current_chunk += paragraph.strip() + "\n\n"
-        # Add any remaining text as the last chunk
-        if current_chunk:
-            chunks.append(current_chunk.strip())
-        return chunks
+                all_chunks.extend(chunks)
+        return all_chunks
 
     # Apply the chunk_text function to each document in the list
     return [chunk_text(doc, max_chunk_size) for doc in docs]
@@ -141,9 +144,9 @@ def generate_answer(answers: dict[str, any], prompt: str) -> str:
   return completion.choices[0].message
 
 
-def test_file_upload():
+def upload_files():
     try:
-        uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True)
+        uploaded_files = st.file_uploader("Choose files to upload to RAG", accept_multiple_files=True)
         if uploaded_files:
             all_text_content = []
             for uploaded_file in uploaded_files:
@@ -179,7 +182,7 @@ def test_file_upload():
             return all_text_content if all_text_content else None
     except Exception as e:
         st.error(f"Error processing file: {str(e)}")
-        return None
+        return []
 
 
 def scrape_url(url):
@@ -190,7 +193,7 @@ def scrape_url(url):
             'title': soup.title.string,
             'content': soup.get_text()
         }
-        st.write(page_content)
         return page_content
     except Exception as e:
-        return f"Error scraping web page: {str(e)}"
+        st.write(f"Error scraping web page: {str(e)}")
+        return ""
