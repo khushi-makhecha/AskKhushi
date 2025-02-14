@@ -5,3 +5,4 @@ pypdf
 tiktoken
 pinecone
 PyPDF2
+bs4
