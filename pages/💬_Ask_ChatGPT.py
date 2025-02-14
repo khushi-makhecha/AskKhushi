@@ -4,7 +4,7 @@ import streamlit as st
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-st.set_page_config(page_title="Try ChatGPT - AskKhushi")
+st.set_page_config(page_title="Try ChatGPT - RAGwise")
 st.title("ChatGPT 3.5")
 
 if "openai_model" not in st.session_state:

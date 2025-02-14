@@ -2,8 +2,8 @@ import streamlit as st
 from helper.rag_functions import *
 import json
 
-st.set_page_config(page_title="AskKhushi")
-st.title("AskKhushi")
+st.set_page_config(page_title="RAGwise")
+st.title("RAGwise")
 
 st.divider()
 

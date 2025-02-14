@@ -1,12 +1,38 @@
 import streamlit as st
 
-st.set_page_config(page_title="Home - AskKhushi")
-st.title("Welcome to my first AI Chatbot")
+st.set_page_config(
+    page_title="Welcome to RAGwise",
+    page_icon="👋",
+    layout="wide"
+)
 
-st.divider()
+st.title("Welcome to RAGwise!")
 
-st.subheader("Interact with different versions of the chatbot from the sidebar")
+st.markdown("""
+Designed to help you interact with documents intelligently.
 
-st.image("https://media.licdn.com/dms/image/D4E12AQEyX2Em7OOEqg/article-cover_image-shrink_720_1280/0/1698523215001?e=2147483647&v=beta&t=MyGxuoB3cN63FG2cCxkNm3krzc19KUf6hAkwYSqKuM0")
+
+- **Read Multiple File Types**
+  - 📄 PDF Documents
+  - 📝 Text Files
+  - 🖼️ Images (JPG, JPEG, PNG)
+  - 🌐 Web Pages (Just paste the URL)
+
+
+### 🚀 Getting Started
+
+1. Head over to the **RAGwise** page (👈 select from the sidebar)
+2. Upload your documents and/or paste a URL
+3. Click "Upload and store data to RAG"
+4. Start asking questions and comparing the answers from ChatGPT 3.5
+
+
+
+
+
+""")
+
+
+
 
 st.write("Built with love @Khushi <3")
