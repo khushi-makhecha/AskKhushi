@@ -4,3 +4,4 @@ langchain-community
 pypdf
 tiktoken
 pinecone
+PyPDF2
