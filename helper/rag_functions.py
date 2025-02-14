@@ -9,6 +9,7 @@ import PyPDF2
 from io import BytesIO
 from bs4 import BeautifulSoup
 import requests
+from helper.image_processor import process_image
 
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
@@ -175,6 +176,9 @@ def upload_files():
                     # To read file as string:
                     string_data = stringio.read()
                     all_text_content.append(string_data)
+                elif uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/jpg" or uploaded_file.type == "image/png":
+                    caption = process_image(uploaded_file)
+                    all_text_content.append(caption)
                 else:
                     st.error(f"Unsupported file type: {uploaded_file.type}. Please upload PDF or TXT files only.")
                     return None
