@@ -75,7 +75,7 @@ def generate_short_id(content: str) -> str:
 
 
 def map_vector_and_text(
-    documents: list[any], doc_embeddings: list[list[float]]
+    documents: list[any], doc_embeddings: list[list[float]], username: str = None
 ) -> list[dict[str, any]]:
     data_with_metadata = []
 
@@ -88,10 +88,14 @@ def map_vector_and_text(
         doc_id = generate_short_id(doc_text)
 
         # Create a data item dictionary
+        metadata = {"text": doc_text}
+        if username:
+            metadata["username"] = username
+
         data_item = {
             "id": doc_id,
             "values": embedding[0],
-            "metadata": {"text": doc_text},  # Include the text as metadata
+            "metadata": metadata,  # Include the text and username as metadata
         }
 
         # Append the data item to the list
@@ -118,10 +122,16 @@ def get_query_embeddings(query: str) -> list[float]:
 
 
 def query_pinecone_index(
-    query_embeddings: list, top_k: int = 2, include_metadata: bool = True
+    query_embeddings: list, top_k: int = 2, include_metadata: bool = True, username: str = None
 ) -> dict[str, any]:
+    filter_dict = None
+    if username:
+        filter_dict = {"username": {"$eq": username}}
     query_response = index.query(
-        vector=query_embeddings, top_k=top_k, include_metadata=include_metadata
+        vector=query_embeddings,
+        top_k=top_k,
+        include_metadata=include_metadata,
+        filter=filter_dict
     )
     return query_response
 

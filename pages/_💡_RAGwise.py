@@ -30,7 +30,11 @@ if st.button("Upload and store data to RAG"):
     # full_document = read_pdf_from_directory("pdf")
     chunked_document = chunk_text_for_list(docs=merged_documents)
     chunked_document_embeddings = generate_embeddings(documents=chunked_document)
-    data_with_meta_data = map_vector_and_text(documents=chunked_document, doc_embeddings=chunked_document_embeddings)
+    data_with_meta_data = map_vector_and_text(
+        documents=chunked_document,
+        doc_embeddings=chunked_document_embeddings,
+        username="khushimakhecha"
+    )
     upsert_success = upsert_data_to_pinecone(data_with_metadata=data_with_meta_data)
     if upsert_success:
         st.success("Data uploaded successfully.")
@@ -43,7 +47,10 @@ prompt = st.text_input("Type in your prompt")
 if st.button("Query Chatbot"):
     if prompt:
         query_embeddings = get_query_embeddings(query=prompt)
-        matching_record = query_pinecone_index(query_embeddings=query_embeddings)
+        matching_record = query_pinecone_index(
+            query_embeddings=query_embeddings,
+            username="khushimakhecha"
+        )
         llm_response = generate_answer(matching_record, prompt)
         st.success(llm_response)
 else:
